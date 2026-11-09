@@ -16,6 +16,12 @@
 body{margin:0}
 a{color:#1f7f7c}a:hover{color:#155e5b}
 button{font-family:inherit}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin .9s linear infinite}
+@media (prefers-reduced-motion: reduce){.spin{animation-duration:2.4s}}
+.menu-item{background:transparent;transition:background-color .12s}
+.menu-item:hover{background:#eef9f9}
+.menu-item:focus-visible{outline:2px solid #21c5c4;outline-offset:-2px}
 input,select{font-family:inherit}
 </style>
 </helmet>
@@ -38,7 +44,10 @@ input,select{font-family:inherit}
 <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
 <button type="button" onClick="{{doUpload}}" style="height: 48px; padding: 0 22px; border: 0; border-radius: 4px; background: #f3f3f3; color: #333333; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 10px"><span aria-hidden="true" style="font-size: 22px; line-height: 1">+</span>Upload a File</button>
 <div style="font-size: 11px; font-weight: 700; color: #767676">Up to 25 files (100 MB total, 200 pages or less per file)</div>
-<sc-if value="{{uploaded}}" hint-placeholder-val="{{ false }}"><div style="font-size: 15px"><b>1 of 1</b> Files were uploaded</div></sc-if>
+<sc-if value="{{uploaded}}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%"><div style="font-size: 15px"><b>{{fileCount}}</b> Files were uploaded</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px">
+<sc-for list="{{upFiles}}" as="f" hint-placeholder-count="2"><div style="display: flex; align-items: center; gap: 8px; padding: 4px 4px 4px 10px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 13px; background: #fafafa"><span style="padding: 2px 5px; border-radius: 3px; background: {{f.color}}; color: #ffffff; font-size: 10px; font-weight: 700">{{f.ext}}</span>{{f.name}}<button type="button" aria-label="Remove file" onClick="{{f.remove}}" style="width: 32px; height: 32px; border: 0; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#595959" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div></sc-for>
+</div></div></sc-if>
 </div>
 <div style="display: flex; align-items: center; gap: 14px; color: #767676; font-size: 11px; font-weight: 700"><div style="flex: 1; height: 1px; background: #e5e5e5"></div>OR<div style="flex: 1; height: 1px; background: #e5e5e5"></div></div>
 <div style="display: flex; flex-direction: column; gap: 10px">
@@ -90,25 +99,30 @@ input,select{font-family:inherit}
 </sc-if>
 
 <sc-if value="{{isLoading}}" hint-placeholder-val="{{ false }}">
-<div style="padding: 80px 0; display: flex; flex-direction: column; align-items: center; gap: 14px"><div style="width: 36px; height: 36px; border-radius: 50%; border: 4px solid #e5e5e5; border-top-color: #21c5c4"></div><div style="font-size: 15px; font-weight: 700">Cross-referencing your products…</div><div style="font-size: 13px; color: #595959">This usually takes a few seconds.</div></div>
+<div style="padding: 80px 0; display: flex; flex-direction: column; align-items: center; gap: 14px"><div class="spin" role="progressbar" aria-label="Cross-referencing your products" style="width: 36px; height: 36px; border-radius: 50%; border: 4px solid #e5e5e5; border-top-color: #21c5c4; box-sizing: border-box"></div><div style="font-size: 15px; font-weight: 700">Cross-referencing your products…</div><div style="font-size: 13px; color: #595959">This usually takes a few seconds.</div></div>
 </sc-if>
 
 <sc-if value="{{isResults}}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 22px">
-<div style="text-align: center; display: flex; flex-direction: column; gap: 8px"><div style="font-size: 16px; color: #595959">Estimated savings</div><div style="font-size: 40px; font-weight: 700">$2,080.20</div><div style="font-size: 13px"><b>1 of 1</b> Files were uploaded and included in the estimation</div><div style="font-size: 11px; font-style: italic; color: #595959">Instant savings analyses are auto-generated projections using latest AI technologies and will be reviewed by staff to verify accuracy.</div></div>
+<div style="text-align: center; display: flex; flex-direction: column; gap: 8px"><div style="font-size: 16px; color: #595959">Estimated savings</div><div style="font-size: 40px; font-weight: 700">$2,080.20</div><div style="font-size: 13px">{{fileLine}}</div><div style="font-size: 11px; font-style: italic; color: #595959">Instant savings analyses are auto-generated projections using latest AI technologies and will be reviewed by staff to verify accuracy.</div></div>
 <div style="display: flex; flex-direction: column; gap: 10px">
-<div><div style="font-size: 16px; font-weight: 700">Featured products for your supply list</div><div style="font-size: 12px; color: #595959; margin-top: 4px">Only products with preferred placement are shown here, not your full match list.</div></div>
-<sc-for list="{{featured}}" as="p" hint-placeholder-count="2">
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px">
-<div style="flex: 1 1 180px; min-width: 0"><div style="font-size: 11px; color: #595959">You buy</div><div style="font-size: 13px">{{p.cur}}</div></div>
-<div aria-hidden="true" style="color: #767676; font-size: 18px">→</div>
-<img src="{{p.thumb}}" alt="" style="width: 44px; height: 44px; border-radius: 6px; object-fit: cover; flex: none">
-<div style="flex: 2 1 200px; min-width: 0; font-size: 13px; font-weight: 700; line-height: 1.3">{{p.name}}</div>
-<button type="button" onClick="{{p.open}}" style="height: 40px; padding: 0 8px; border: 0; background: transparent; color: #1f7f7c; text-decoration: underline; font-size: 13px; cursor: pointer">View details</button>
-<button type="button" aria-label="Add to cart" onClick="{{p.cart}}" style="width: 44px; height: 44px; flex: none; border-radius: 4px; border: 1px solid {{p.cartBorder}}; background: {{p.cartBg}}; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333333" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"></path></svg></button>
+<div><div style="font-size: 16px; font-weight: 700">Your products, cross-referenced</div><div style="font-size: 12px; color: #595959; margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap">Click <img src="./assets/85de9eae35cc04dc938c3c7bb627aeb7.png" alt="" width="18" height="18" style="display: block; width: 18px; height: 18px"> next to a proposed SKU to see a featured product.</div></div>
+<div style="border: 1px solid #e5e5e5; border-radius: 8px; overflow-x: auto">
+<div style="min-width: 1290px">
+<div style="padding: 10px 14px; background: #fafafa; border-bottom: 1px solid #e5e5e5; font-size: 12px; color: #595959">Matched · {{xCount}} products</div>
+<div style="display: grid; grid-template-columns: 28px 90px 230px 170px 110px 100px 150px 250px 44px; gap: 10px; padding: 10px 14px; font-size: 11px; color: #595959; align-items: center"><div style="width: 16px; height: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px"><i style="background: #f2994a"></i><i style="background: #27ae60"></i><i style="background: #bdbdbd"></i><i style="background: #ffe70f"></i></div><div>Current SKU</div><div>Current SKU Description</div><div>Supplier Name</div><div>Current MFG Name</div><div>Current MFG SKU</div><div>Proposed SKU</div><div>Proposed SKU Description</div><div></div></div>
+<sc-for list="{{xrows}}" as="r" hint-placeholder-count="6">
+<div style="position: relative; display: grid; grid-template-columns: 28px 90px 230px 170px 110px 100px 150px 250px 44px; gap: 10px; padding: 6px 14px; align-items: center; background: {{r.bg}}; font-size: 13px">
+<div style="width: 18px; height: 18px; border-radius: 2px; background: {{r.sw}}"></div>
+<div>{{r.sku}}</div><div>{{r.desc}}</div><div>{{r.sup}}</div><div>{{r.mfg}}</div><div>{{r.mfgsku}}</div>
+<div style="display: flex; align-items: center; gap: 4px"><sc-if value="{{r.pref}}" hint-placeholder-val="{{ true }}"><button type="button" aria-label="Show featured product" onClick="{{r.open}}" style="width: 32px; height: 32px; flex: none; padding: 0; border: 0; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center"><img src="./assets/85de9eae35cc04dc938c3c7bb627aeb7.png" alt="" width="18" height="18" style="display: block; width: 18px; height: 18px"></button></sc-if><span>{{r.psku}}</span></div>
+<div>{{r.pdesc}}</div>
+<button type="button" aria-label="More actions" onClick="{{r.menu}}" style="width: 40px; height: 40px; border: 0; background: transparent; cursor: pointer; font-size: 20px; color: #333333">⋮</button>
+<sc-if value="{{r.menuOpen}}" hint-placeholder-val="{{ false }}"><div style="position: absolute; right: 50px; {{r.menuPos}}; z-index: 5; min-width: 220px; padding: 6px 0; background: #ffffff; border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,0.18)"><button type="button" class="menu-item" onClick="{{r.details}}" style="display: block; width: 100%; height: 44px; padding: 0 16px; border: 0; text-align: left; font-size: 14px; color: #333333; cursor: pointer">Show Proposed SKU details</button><button type="button" class="menu-item" onClick="{{r.cart}}" style="display: block; width: 100%; height: 44px; padding: 0 16px; border: 0; text-align: left; font-size: 14px; color: #333333; cursor: pointer">{{r.cartLabel}}</button></div></sc-if>
 </div>
 </sc-for>
-<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}"><div style="align-self: flex-end; padding: 8px 14px; border-radius: 4px; background: #333333; color: #ffffff; font-size: 13px">{{toast}}</div></sc-if>
+</div>
+</div>
 </div>
 <div style="display: flex; justify-content: flex-end"><button type="button" onClick="{{restart}}" style="width: 100%; max-width: 327px; height: 52px; border: 0; border-radius: 4px; background: #333333; color: #ffffff; font-size: 17px; cursor: pointer">Start again</button></div>
 </div>
@@ -118,22 +132,24 @@ input,select{font-family:inherit}
 </div>
 
 <sc-if value="{{showDetail}}" hint-placeholder-val="{{ false }}">
-<div style="position: absolute; inset: 0; background: rgba(51,51,51,0.45); display: flex; justify-content: center; align-items: flex-start; padding: 40px 16px; box-sizing: border-box">
-<div style="position: relative; width: 100%; max-width: 680px; background: #ffffff; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.18); padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+<div style="position: fixed; inset: 0; z-index: 20; background: rgba(51,51,51,0.45); display: flex; justify-content: center; align-items: flex-start; padding: 40px 16px; box-sizing: border-box">
+<div style="position: relative; width: 100%; max-width: 680px; max-height: calc(100vh - 80px); overflow-y: auto; background: #ffffff; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.18); padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
 <button type="button" aria-label="Close" onClick="{{closeDetail}}" style="position: absolute; right: 12px; top: 10px; width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; color: #595959; cursor: pointer">×</button>
+<button type="button" aria-label="More options" onClick="{{toggleAiMenu}}" style="position: absolute; right: 56px; top: 10px; width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; color: #595959; cursor: pointer">⋮</button>
+<sc-if value="{{aiMenu}}" hint-placeholder-val="{{ false }}"><div style="position: absolute; right: 56px; top: 54px; z-index: 3; min-width: 210px; padding: 6px 0; background: #ffffff; border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,0.18)"><button type="button" class="menu-item" onClick="{{openAi}}" style="display: block; width: 100%; height: 44px; padding: 0 16px; border: 0; text-align: left; font-size: 14px; color: #333333; cursor: pointer">Generate AI summary</button></div></sc-if>
 <div style="display: flex; flex-wrap: wrap; gap: 22px">
 <div style="flex: none; width: 200px; display: flex; flex-direction: column; gap: 8px">
-<img src="{{mainImg}}" alt="{{pd.name}}" style="width: 200px; height: 200px; border-radius: 8px; object-fit: cover">
+<sc-if value="{{noImgs}}" hint-placeholder-val="{{ false }}"><div style="width: 200px; height: 200px; border-radius: 8px; background: #f2f2f2; color: #595959; font-size: 13px; display: flex; align-items: center; justify-content: center">No image provided</div></sc-if>
+<sc-if value="{{hasImgs}}" hint-placeholder-val="{{ true }}"><button type="button" aria-label="Expand image" onClick="{{openLb}}" style="position: relative; width: 200px; height: 200px; padding: 0; border: 0; border-radius: 8px; overflow: hidden; background: #f7f7f7; cursor: zoom-in"><img src="{{mainImg}}" alt="{{pd.name}}" style="width: 200px; height: 200px; object-fit: cover; display: block"><span style="position: absolute; right: 8px; bottom: 8px; width: 32px; height: 32px; border-radius: 50%; background: rgba(51,51,51,0.75); display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></button></sc-if>
 <div style="display: flex; gap: 8px">
 <sc-for list="{{thumbs}}" as="t" hint-placeholder-count="3">
 <button type="button" aria-label="Show photo" onClick="{{t.pick}}" style="width: 61px; height: 61px; padding: 0; border-radius: 6px; overflow: hidden; border: 2px solid {{t.border}}; background: #ffffff; cursor: pointer"><img src="{{t.src}}" alt="" style="width: 57px; height: 57px; object-fit: cover; display: block"></button>
 </sc-for>
 </div>
 </div>
-<div style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding-right: 24px">
+<div style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding-right: 76px">
 <div><div style="font-size: 22px; font-weight: 700; line-height: 1.25">{{pd.name}}</div><div style="font-size: 13px; color: #595959; margin-top: 4px">{{pd.sku}} · {{pd.mfr}}</div></div>
-<div style="display: flex; gap: 10px"><button type="button" onClick="{{openRequest}}" style="height: 44px; padding: 0 22px; border: 0; border-radius: 4px; background: #333333; color: #ffffff; font-size: 15px; cursor: pointer">Request a sample</button><button type="button" aria-label="Add to cart" onClick="{{cartDetail}}" style="width: 44px; height: 44px; border-radius: 4px; border: 1px solid {{detailCartBorder}}; background: {{detailCartBg}}; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333333" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"></path></svg></button></div>
-<div style="padding: 10px 12px; border-radius: 8px; background: #eef9f9; border: 1px solid #cdeeee"><div style="font-size: 12px; font-weight: 700; color: #1f7f7c">AI summary · vs. what you buy now</div><div style="font-size: 13px; line-height: 1.4; margin-top: 5px">{{pd.ai}}</div></div>
+<div style="display: flex; gap: 10px"><button type="button" onClick="{{openRequest}}" style="height: 44px; padding: 0 22px; border: 0; border-radius: 4px; background: #333333; color: #ffffff; font-size: 15px; cursor: pointer">Request a sample</button><button type="button" aria-label="{{detailCartLabel}}" onClick="{{cartDetail}}" style="position: relative; width: 44px; height: 44px; border-radius: 4px; border: 1px solid {{detailCartBorder}}; background: {{detailCartBg}}; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333333" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"></path></svg><sc-if value="{{detailInCart}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; right: -7px; top: -7px; width: 18px; height: 18px; border-radius: 50%; background: #27ae60; border: 2px solid #ffffff; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg></span></sc-if></button></div>
 </div>
 </div>
 <div style="height: 1px; background: #e5e5e5"></div>
@@ -147,6 +163,55 @@ input,select{font-family:inherit}
 <button type="button" onClick="{{openVideo}}" style="height: 40px; padding: 0; border: 0; background: transparent; color: #1f7f7c; text-decoration: underline; font-size: 14px; cursor: pointer">Product video</button>
 </div>
 <div><div style="font-size: 14px">{{pd.cat}}</div><div style="font-size: 11px; color: #595959; margin-top: 3px">Category</div></div>
+<div style="height: 1px; background: #e5e5e5"></div>
+<div><h3 style="margin: 0; font-size: 18px">Description</h3><p style="margin: 8px 0 0; font-size: 14px; line-height: 1.6">{{pd.desc}}</p></div>
+<sc-if value="{{hasFeatures}}" hint-placeholder-val="{{ true }}"><div><h3 style="margin: 0; font-size: 18px">Key features</h3><ul style="margin: 8px 0 0; padding-left: 20px; font-size: 14px; line-height: 1.7"><sc-for list="{{features}}" as="f" hint-placeholder-count="4"><li>{{f.t}}</li></sc-for></ul></div></sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{showLb}}" hint-placeholder-val="{{ false }}">
+<div role="dialog" aria-label="Product image" style="position: fixed; inset: 0; z-index: 45; background: rgba(15,15,15,0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; box-sizing: border-box">
+<button type="button" aria-label="Close image" onClick="{{closeLb}}" style="position: absolute; right: 16px; top: 16px; width: 48px; height: 48px; border: 0; border-radius: 50%; background: rgba(255,255,255,0.12); color: #ffffff; font-size: 26px; cursor: pointer">×</button>
+<div style="display: flex; align-items: center; gap: 16px; max-width: 100%">
+<sc-if value="{{lbMulti}}" hint-placeholder-val="{{ true }}"><button type="button" aria-label="Previous image" onClick="{{prevImg}}" style="width: 48px; height: 48px; flex: none; border: 0; border-radius: 50%; background: rgba(255,255,255,0.15); color: #ffffff; font-size: 24px; cursor: pointer">‹</button></sc-if>
+<img src="{{mainImg}}" alt="{{pd.name}}" style="max-width: min(78vw, 820px); max-height: 74vh; border-radius: 8px; object-fit: contain; background: #ffffff; display: block">
+<sc-if value="{{lbMulti}}" hint-placeholder-val="{{ true }}"><button type="button" aria-label="Next image" onClick="{{nextImg}}" style="width: 48px; height: 48px; flex: none; border: 0; border-radius: 50%; background: rgba(255,255,255,0.15); color: #ffffff; font-size: 24px; cursor: pointer">›</button></sc-if>
+</div>
+<div style="font-size: 14px; color: #e5e5e5">{{pd.name}} · {{lbCount}}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{showPicker}}" hint-placeholder-val="{{ false }}">
+<div style="position: fixed; inset: 0; z-index: 30; background: rgba(20,20,20,0.5); display: flex; justify-content: center; align-items: flex-start; padding: 60px 16px; box-sizing: border-box">
+<div role="dialog" aria-label="Choose files" style="width: 100%; max-width: 820px; background: #ffffff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arimo, Arial, sans-serif">
+<div style="height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: #f4f4f4; border-bottom: 1px solid #e0e0e0"><div style="display: flex; gap: 8px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #d9d9d9"></span><span style="width: 12px; height: 12px; border-radius: 50%; background: #d9d9d9"></span><span style="width: 12px; height: 12px; border-radius: 50%; background: #d9d9d9"></span></div><div style="font-size: 14px; font-weight: 600">Downloads</div><div style="width: 160px; height: 28px; border-radius: 6px; background: #ffffff; border: 1px solid #e0e0e0; font-size: 12px; color: #767676; display: flex; align-items: center; padding: 0 10px; box-sizing: border-box">Search</div></div>
+<div style="display: flex; min-height: 360px">
+<div style="width: 170px; flex: none; padding: 14px 10px; background: #fafafa; border-right: 1px solid #ececec; font-size: 13px; display: flex; flex-direction: column; gap: 2px"><div style="font-size: 11px; color: #767676; padding: 4px 8px">Favorites</div><div style="padding: 6px 8px">Recents</div><div style="padding: 6px 8px">Desktop</div><div style="padding: 6px 8px">Documents</div><div style="padding: 6px 8px; border-radius: 6px; background: #e3e7e8; font-weight: 600">Downloads</div><div style="font-size: 11px; color: #767676; padding: 12px 8px 4px">Locations</div><div style="padding: 6px 8px">iCloud Drive</div></div>
+<div style="flex: 1; min-width: 0; overflow-x: auto">
+<div style="min-width: 520px">
+<div style="display: grid; grid-template-columns: 1fr 120px 80px 110px; gap: 10px; padding: 8px 16px; font-size: 11px; color: #767676; border-bottom: 1px solid #ececec"><div>Name</div><div>Kind</div><div>Size</div><div>Date Added</div></div>
+<sc-for list="{{pickFiles}}" as="f" hint-placeholder-count="6">
+<button type="button" onClick="{{f.toggle}}" aria-pressed="{{f.pressed}}" style="display: grid; grid-template-columns: 1fr 120px 80px 110px; gap: 10px; align-items: center; width: 100%; min-height: 44px; padding: 6px 16px; border: 0; border-bottom: 1px solid #f2f2f2; background: {{f.bg}}; color: {{f.fg}}; text-align: left; font-size: 13px; cursor: pointer">
+<span style="display: flex; align-items: center; gap: 10px; min-width: 0"><span style="width: 18px; height: 18px; flex: none; border-radius: 4px; border: 2px solid {{f.box}}; background: {{f.boxBg}}; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 12px; line-height: 1; box-sizing: border-box">{{f.tick}}</span><span style="padding: 2px 5px; border-radius: 3px; background: {{f.color}}; color: #ffffff; font-size: 10px; font-weight: 700; flex: none">{{f.ext}}</span><span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{f.name}}</span></span>
+<span>{{f.kind}}</span><span>{{f.size}}</span><span>{{f.date}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: #f4f4f4; border-top: 1px solid #e0e0e0"><div style="font-size: 13px; color: #595959">{{pickNote}}</div><div style="display: flex; gap: 10px"><button type="button" onClick="{{closePicker}}" style="height: 36px; padding: 0 16px; border: 1px solid #cfcfcf; border-radius: 6px; background: #ffffff; font-size: 13px; color: #333333; cursor: pointer">Cancel</button><button type="button" onClick="{{openFiles}}" style="height: 36px; padding: 0 20px; border: 0; border-radius: 6px; background: {{openBg}}; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer">Open</button></div></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{showAi}}" hint-placeholder-val="{{ false }}">
+<div style="position: fixed; inset: 0; z-index: 40; background: rgba(20,20,20,0.55); display: flex; justify-content: center; align-items: flex-start; padding: 120px 16px; box-sizing: border-box">
+<div role="dialog" aria-label="AI summary" style="width: 100%; max-width: 520px; background: #ffffff; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="#21c5c4" aria-hidden="true"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"></path></svg><h2 style="margin: 0; font-size: 20px">AI summary</h2></div>
+<div style="font-size: 13px; color: #595959">{{pd.name}} vs. what you buy now</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.55">{{pd.ai}}</p>
+<div style="display: flex; justify-content: flex-end"><button type="button" onClick="{{closeAi}}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 4px; background: #333333; color: #ffffff; font-size: 15px; cursor: pointer">Close</button></div>
 </div>
 </div>
 </sc-if>
@@ -187,13 +252,19 @@ input,select{font-family:inherit}
 </div>
 </div>
 </sc-if>
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position: fixed; right: 24px; bottom: 24px; z-index: 50; display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; border-radius: 8px; background: {{toastBg}}; border: 1px solid {{toastBorder}}; box-shadow: 0 8px 24px rgba(0,0,0,0.16); color: {{toastFg}}">
+<div style="position: relative; width: 36px; height: 36px; flex: none; border-radius: 50%; background: {{toastIcon}}; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"></path></svg><span style="position: absolute; right: -4px; top: -4px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff; border: 1px solid {{toastIcon}}; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="{{toastIcon}}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{toastMark}}"></path></svg></span></div>
+<div><div style="font-size: 15px; font-weight: 700">{{toast}}</div><div style="font-size: 12px; margin-top: 2px">{{toastSub}}</div></div>
+</div>
+</sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { step: 'upload', uploaded: false, q: '', searching: false, rows: [], info: ['Jordan', 'Lee', 'Riverside Dental Group', '1200 Riverside Ave, Austin, TX', 'jordan@riversidedental.com', '(512) 555-0142'], cart: {}, toast: '', detail: null, img: 0, doc: null, playing: false, request: false, sent: false };
+    this.state = { lb: false, picker: false, sel: {}, files: [], menuRow: null, aiMenu: false, showAi: false, step: 'upload', uploaded: false, q: '', searching: false, rows: [], info: ['Jordan', 'Lee', 'Riverside Dental Group', '1200 Riverside Ave, Austin, TX', 'jordan@riversidedental.com', '(512) 555-0142'], cart: {}, toast: '', detail: null, img: 0, doc: null, playing: false, request: false, sent: false };
     this.timers = [];
   }
   componentWillUnmount() { this.timers.forEach(clearTimeout); }
@@ -203,13 +274,17 @@ class Component extends DCLogic {
     const G = ['./assets/5ad5e500aee998e54d4103209c958728.webp', './assets/2fcfba2f958e9415f0fff6ecb97bbdee.webp', './assets/0e7e99efdf36452ec0b60f6d86d5abc2.webp'];
     const P = {
       gown: { name: 'Isolation Gowns, AAMI Level 2, Universal Size, Yellow', sku: 'DEM-1004', mfr: 'Demo Manufacturer01', cur: 'CLX-2004 · Isolation Gown, Level 2, One Size', imgs: G, docs: true,
-        ai: 'Like your CLX-2004 gown, it’s AAMI Level 2 rated. It adds elastic knit cuffs and a full-back overlap, and costs $18.95 per pack of 10.',
+        ai: 'Like your CLX-2004 gown, it’s AAMI Level 2 rated. It adds elastic knit cuffs and a full-back overlap, and comes in packs of 10.',
         specs: [['$18.95', 'Proposed price'], ['10', 'Pkg qty'], ['Each', 'UoM'], ['Demo Manufacturer01', 'Brand'], ['USA', 'Country of origin'], ['N/A', 'NDC'], ['N/A', 'UPC'], ['In Stock', 'Material status'], ['SMS', 'Material'], ['AAMI PB70 Level 2', 'Protection level'], ['Universal', 'Size'], ['Yellow', 'Color']],
         certs: 'AAMI PB70 Level 2, FDA Registered, ISO 13485', cat: 'Infection Control / Personal Protection / Protective Apparel / Isolation Gowns' },
       shield: { name: 'Disposable Face Shields, Full-Length, Anti-Fog', sku: 'DEM-1006', mfr: 'Demo Manufacturer01', cur: 'FS-0918 · Face Shield w/ Headband, 9 in', imgs: ['./assets/448c8d30ea25308c754bd44268b08b0d.webp'], docs: false,
         ai: 'Like your FS-0918 shield, it’s full-length. It adds an anti-fog coating and a foam headband, and fits over glasses, loupes and masks.',
         specs: [['[PRICE]', 'Proposed price'], ['10', 'Pkg qty'], ['Box', 'UoM'], ['Demo Manufacturer01', 'Brand'], ['[COUNTRY]', 'Country of origin'], ['N/A', 'NDC'], ['N/A', 'UPC'], ['In Stock', 'Material status'], ['Full-length', 'Length'], ['Anti-fog', 'Coating'], ['Eyes, nose and mouth', 'Coverage'], ['Foam, elastic strap', 'Headband']],
-        certs: 'FDA Registered, ISO 13485', cat: 'Infection Control / Personal Protection / Face Shields' }
+        certs: 'FDA Registered, ISO 13485', cat: 'Infection Control / Personal Protection / Face Shields' },
+      art: { name: 'Articaine HCl 4% with Epinephrine 1:100,000, 1.7 mL', sku: 'DEM-HV-ART4-100', mfr: 'Demo MFG 01', cur: 'CLX-2010 · Articaine 4% w/EPI 1.7 mL INJ 1:100 Gold', imgs: ['./assets/6861e5006db8b5b8a79b203fc0fccfc5.webp', './assets/13bcb73b995d32d03f96339edd1d0053.webp', './assets/3fb46f8cad064ad58d253c77951c2a3e.webp'], docs: true,
+        ai: 'Like your CLX-2010 cartridge, it’s articaine 4% with epinephrine 1:100,000 in a 1.7 mL gold-band cartridge. It comes 50 per box, with a latex-free plunger.',
+        specs: [['$44.75', 'Proposed price'], ['50', 'Pkg qty'], ['BX', 'UoM'], ['Demo MFG 01', 'Brand'], ['Canada', 'Country of origin'], ['99207-0410-05', 'NDC'], ['850102001029', 'UPC'], ['Articaine HCl 40 mg/mL', 'Active ingredient'], ['Epinephrine 1:100,000', 'Vasoconstrictor'], ['1.7 mL', 'Fill volume'], ['Gold', 'Color band'], ['20–25 °C, protect from light', 'Storage']],
+        certs: 'FDA Registered, GMP', cat: 'Anesthetics / Local Anesthetic Cartridges' }
     };
     const order = ['upload', 'info', 'attrs', 'results'];
     const at = S.step === 'loading' ? 2 : Math.min(order.indexOf(S.step), 2);
@@ -221,28 +296,88 @@ class Component extends DCLogic {
     });
     const flabels = ['First Name*', 'Last Name*', 'Organization Name*', 'Organization Address*', 'Email*', 'Phone Number'];
     const fields = flabels.map((label, i) => ({ id: 'f' + i, label, value: S.info[i], change: (e) => { const v = e.target.value; this.setState((st) => { const info = st.info.slice(); info[i] = v; return { info }; }); } }));
+    const XR = [
+      ['#ffe70f', 'CLX-2004', 'Isolation Gown, Level 2, One Size Fits Most, Yellow', 'Medline', 'MDL-8400', 'DEM-1004', 'Isolation Gowns, AAMI Level 2, Universal Size, Yellow', 'gown'],
+      ['#ffe70f', 'FS-0918', 'Face Shield w/ Headband, 9 in', 'Medline', 'MDL-FS9', 'DEM-1006', 'Disposable Face Shields, Full-Length, Anti-Fog', 'shield'],
+      ['#ffe70f', 'CLX-2010', 'Articaine 4% w/EPI 1.7 mL INJ 1:100 Gold', 'Demo Pharma 02', 'DP2-ART4-50', 'DEM-HV-ART4-100', 'Articaine HCl 4% with Epinephrine 1:100,000, 1.7 mL', 'art'],
+      ['#27ae60', 'CLX-2021', 'Alginate Impression Material, Fast Set, Mint, 1 lb', 'Kerr', '27416', 'DEM650-27416DX', 'IMAGE ALGINATE FAST SET CANISTER, 1 X 1 LB.', 'alg'],
+      ['#27ae60', 'CLX-2030', 'Prophy Angles, Soft Cup, Disposable', 'Young Dental', '470020', 'DEM-470020', 'Young Prophy Angles, Soft Cup, 100/bx', 'pro'],
+      ['#27ae60', 'CLX-2045', 'Cotton Rolls #2, Medium, Non-Sterile', 'Richmond Dental', '200205', 'DEM-200205', 'Richmond Cotton Rolls #2, Medium, 2000/bx', 'cot'],
+      ['#f2994a', 'CLX-2052', 'Saliva Ejectors, Clear with Blue Tip', 'Crosstex', 'SEC', 'DEM-SE100', 'Saliva Ejectors, Clear with Blue Tip, 100/bag', 'sal']
+    ];
+    const GEN = {
+      alg: ['Kerr', '1', 'Canister', 'Impression Materials / Alginates', 'Same Kerr fast-set alginate as your CLX-2021, in a 1 lb canister.'],
+      pro: ['Young Dental', '100', 'Box', 'Preventive / Prophy Angles', 'Same Young soft-cup prophy angle as your CLX-2030, packed 100 per box.'],
+      cot: ['Richmond Dental', '2000', 'Box', 'Disposables / Cotton Rolls', 'Same Richmond #2 medium cotton roll as your CLX-2045, in a 2,000-count box.'],
+      sal: ['Crosstex', '100', 'Bag', 'Disposables / Saliva Ejectors', 'A comparable clear saliva ejector with a blue tip, packed 100 per bag.']
+    };
+    XR.forEach((r) => { const g = GEN[r[7]]; if (g) P[r[7]] = { name: r[6], sku: r[5], mfr: g[0], imgs: [], docs: false, ai: g[4],
+      specs: [[g[1], 'Pkg qty'], [g[2], 'UoM'], [g[0], 'Brand'], ['[COUNTRY]', 'Country of origin'], ['N/A', 'NDC'], ['N/A', 'UPC'], ['In Stock', 'Material status']], certs: '—', cat: g[3] }; });
+    const DESC = {
+      gown: ['Lightweight SMS isolation gowns rated AAMI PB70 Level 2 for low-to-moderate fluid exposure. Elastic knit cuffs, neck and waist ties, and a full-back overlap give complete coverage. Latex-free and single-use, ideal for dental procedures, exam rooms and isolation areas.', ['AAMI PB70 Level 2 for low-to-moderate fluid exposure', 'Elastic knit cuffs', 'Neck and waist ties', 'Full-back overlap for complete coverage', 'Latex-free, single-use']],
+      shield: ['Optically clear, full-length face shields that protect the eyes, nose and mouth from splash, spray and spatter. An anti-fog coating keeps vision clear, and the foam headband with elastic strap gives an all-day comfortable fit. Wearable over glasses, loupes and masks.', ['Protects eyes, nose and mouth from splash, spray and spatter', 'Anti-fog coating keeps vision clear', 'Foam headband with elastic strap for all-day comfort', 'Fits over glasses, loupes and masks']],
+      art: ['Local anesthetic dental cartridge: articaine hydrochloride 4% with epinephrine 1:100,000 in a 1.7 mL glass cartridge with a latex-free plunger and gold color band. For infiltration and nerve block anesthesia. Rx only.', ['Articaine HCl 4% with epinephrine 1:100,000', '1.7 mL glass cartridges, 50 per box', 'Latex-free plunger, gold color band', 'Sterile, Rx only', 'Store at 20–25 °C, protected from light; do not freeze']],
+      alg: ['Fast-set alginate impression material in a 1 lb canister. Mixes smooth and sets quickly for accurate study models and preliminary impressions.', ['Fast set', 'Smooth, creamy mix', '1 lb canister']],
+      pro: ['Disposable prophy angles with a soft, flexible cup that adapts to tooth contours for efficient polishing. Single-use for infection control.', ['Soft, flexible cup', 'Disposable, single-use', '100 per box']],
+      cot: ['Medium #2 cotton rolls for isolation and moisture control during procedures. Highly absorbent and non-sterile.', ['Size #2, medium', 'Highly absorbent', 'Non-sterile', '2,000 per box']],
+      sal: ['Flexible clear saliva ejectors with soft blue tips for patient comfort during procedures. Bendable tubing holds its shape.', ['Clear tubing, soft blue tip', 'Bendable, holds shape', '100 per bag']]
+    };
+    Object.keys(DESC).forEach((k) => { if (P[k]) { P[k].desc = DESC[k][0]; P[k].features = DESC[k][1]; } });
+    const FILES = [
+      ['Apex_Medical_Invoice_INV-10482.pdf', 'PDF', '#d94a3d', 'PDF document', '284 KB', 'Oct 12, 2026'],
+      ['Purchase_History_Report_Q3_2026.xlsx', 'XLSX', '#1e7d45', 'Excel workbook', '96 KB', 'Oct 1, 2026'],
+      ['Shopping_Cart_Screenshot.png', 'PNG', '#2f6fd6', 'PNG image', '1.2 MB', 'Oct 20, 2026'],
+      ['Purchase_Order_PO-7731.pdf', 'PDF', '#d94a3d', 'PDF document', '158 KB', 'Sep 28, 2026'],
+      ['Supply_Order_Export.csv', 'CSV', '#5f6b73', 'CSV document', '42 KB', 'Sep 15, 2026'],
+      ['Invoice_Scan_Sept_2026.jpg', 'JPG', '#2f6fd6', 'JPEG image', '2.4 MB', 'Sep 30, 2026']
+    ];
+    const nSel = Object.keys(S.sel).filter((k) => S.sel[k]).length;
+    const pickFiles = FILES.map((f, i) => { const on = !!S.sel[i]; return { name: f[0], ext: f[1], color: f[2], kind: f[3], size: f[4], date: f[5], pressed: on ? 'true' : 'false',
+      bg: on ? '#2f6fd6' : '#ffffff', fg: on ? '#ffffff' : '#333333', box: on ? '#ffffff' : '#9e9e9e', boxBg: on ? '#2f6fd6' : '#ffffff', tick: on ? '✓' : '',
+      toggle: () => this.setState((st) => ({ sel: { ...st.sel, [i]: !st.sel[i] } })) }; });
+    const upFiles = S.files.map((i, k) => ({ name: FILES[i][0], ext: FILES[i][1], color: FILES[i][2], remove: () => this.setState((st) => { const files = st.files.filter((_, j) => j !== k); return { files, uploaded: files.length > 0 }; }) }));
+    const xrows = XR.map((r, i) => ({ sw: r[0], sku: r[1], desc: r[2], sup: 'Apex Medical Distributors', mfg: r[3], mfgsku: r[4], psku: r[5], pdesc: r[6],
+      pref: r[7] === 'gown' || r[7] === 'shield' || r[7] === 'art', bg: i % 2 === 0 ? '#f6f6f6' : '#ffffff', menuOpen: S.menuRow === i, menuPos: i >= 3 ? 'bottom: 44px' : 'top: 44px',
+      open: () => this.setState({ detail: r[7], img: 0, menuRow: null }),
+      menu: () => this.setState((st) => ({ menuRow: st.menuRow === i ? null : i })),
+      details: () => this.setState({ detail: r[7], img: 0, menuRow: null }),
+      cartLabel: S.cart[r[7]] ? 'Remove from cart' : 'Add to cart', cart: () => { this.setState({ menuRow: null }); this.addCart(r[7]); } }));
     const pd0 = S.detail ? P[S.detail] : P.gown;
-    const pd = { ...pd0, specs: pd0.specs.map((s) => ({ v: s[0], k: s[1] })) };
+    this.names = {}; Object.keys(P).forEach((k) => { this.names[k] = P[k].name; });
+    const pd = { ...pd0, specs: pd0.specs.filter((s) => s[1] !== 'Proposed price').map((s) => ({ v: s[0], k: s[1] })) };
     const featured = ['gown', 'shield'].map((id) => ({ cur: P[id].cur, name: P[id].name, thumb: P[id].imgs[0], cartBg: S.cart[id] ? '#21c5c4' : '#ffffff', cartBorder: S.cart[id] ? '#21c5c4' : '#333333',
       open: () => this.setState({ detail: id, img: 0 }), cart: () => this.addCart(id) }));
     const rows = S.rows.map((r, i) => ({ ...r, remove: () => this.setState((st) => ({ rows: st.rows.filter((_, j) => j !== i) })) }));
-    const docs = { spec: ['DEM-1004 product sheet.pdf', './assets/59684ad515e7d733f2fba7952450d700.webp'], sds: ['DEM-1004 safety data sheet.pdf', './assets/883485b2c8c497836974e018fec60518.webp'] };
-    const docTitle = S.doc === 'video' ? 'Product video' : (S.doc ? (pd.docs ? docs[S.doc][0] : (S.doc === 'spec' ? 'Product sheet' : 'Safety data sheet')) : '');
+    const DOCSETS = { gown: { spec: ['DEM-1004 product sheet.pdf', './assets/59684ad515e7d733f2fba7952450d700.webp'], sds: ['DEM-1004 safety data sheet.pdf', './assets/883485b2c8c497836974e018fec60518.webp'], video: './assets/6a8ace3020e2da34ae2cc0cef68e3a46.webp' },
+      art: { spec: ['DEM-HV-ART4-100 product sheet.pdf', './assets/e3414663fef163f873f343f0cd8e4a94.webp'], sds: ['DEM-HV-ART4-100 SDS.pdf', './assets/2ec372d214370f042f646c0b9c224876.webp'], video: './assets/8fe0a4507406a6bc56b84de1e57dd3b6.webp' } };
+    const docs = DOCSETS[S.detail] || {};
+    const docTitle = S.doc === 'video' ? 'Product video' : (S.doc ? (docs[S.doc] ? docs[S.doc][0] : (S.doc === 'spec' ? 'Product sheet' : 'Safety data sheet')) : '');
     return {
-      steps, fields, rows, featured, pd,
+      steps, fields, rows, featured, pd, xrows, xCount: xrows.length,
+      hasImgs: pd.imgs.length > 0, noImgs: pd.imgs.length === 0, aiMenu: S.aiMenu, showAi: S.showAi,
+      toggleAiMenu: () => this.setState((st) => ({ aiMenu: !st.aiMenu })), openAi: () => this.setState({ aiMenu: false, showAi: true }), closeAi: () => this.setState({ showAi: false }),
       isUpload: S.step === 'upload', isInfo: S.step === 'info', isAttrs: S.step === 'attrs', isLoading: S.step === 'loading', isResults: S.step === 'results',
-      uploaded: S.uploaded, q: S.q, hasRows: S.rows.length > 0, rowCount: S.rows.length + (S.rows.length === 1 ? ' product' : ' products'),
+      uploaded: S.files.length > 0, fileCount: S.files.length + ' of ' + S.files.length, upFiles, pickFiles, showPicker: S.picker,
+      showLb: S.lb && !!S.detail && pd.imgs.length > 0, lbMulti: pd.imgs.length > 1, lbCount: (Math.min(S.img, pd.imgs.length - 1) + 1) + ' / ' + pd.imgs.length,
+      openLb: () => this.setState({ lb: true }), closeLb: () => this.setState({ lb: false }),
+      prevImg: () => this.setState((st) => ({ img: (st.img - 1 + pd.imgs.length) % pd.imgs.length })), nextImg: () => this.setState((st) => ({ img: (st.img + 1) % pd.imgs.length })),
+      fileLine: S.files.length ? S.files.length + ' of ' + S.files.length + ' files were uploaded and included in the estimation' : 'Your searched products were included in the estimation',
+      hasFeatures: (pd.features || []).length > 0, features: (pd.features || []).map((x) => ({ t: x })),
+      pickNote: nSel ? nSel + (nSel === 1 ? ' file selected' : ' files selected') : 'Select one or more files', openBg: nSel ? '#2f6fd6' : '#a9bfe6',
+      closePicker: () => this.setState({ picker: false }),
+      openFiles: () => { if (!nSel) return; const pick = Object.keys(S.sel).filter((k) => S.sel[k]).map(Number); this.setState((st) => { const files = st.files.slice(); pick.forEach((i) => { if (files.indexOf(i) < 0) files.push(i); }); return { files, uploaded: true, picker: false, sel: {} }; }); }, q: S.q, hasRows: S.rows.length > 0, rowCount: S.rows.length + (S.rows.length === 1 ? ' product' : ' products'),
       searchLabel: S.searching ? 'Searching…' : 'Search', searchBg: S.searching ? '#bdbdbd' : '#333333',
       contBg: S.uploaded || S.rows.length ? '#333333' : '#bdbdbd',
-      hasToast: !!S.toast, toast: S.toast,
+      hasToast: !!S.toast, toast: S.toast, toastSub: S.toastSub || '',
+      toastBg: S.toastKind === 'removed' ? '#f4f4f4' : '#e8f7ef', toastBorder: S.toastKind === 'removed' ? '#767676' : '#27ae60', toastFg: S.toastKind === 'removed' ? '#333333' : '#14532d', toastIcon: S.toastKind === 'removed' ? '#595959' : '#27ae60', toastMark: S.toastKind === 'removed' ? 'M6 12h12' : 'M5 12l5 5L20 7',
       showDetail: !!S.detail && !S.doc && !S.request, mainImg: pd.imgs[Math.min(S.img, pd.imgs.length - 1)],
       thumbs: pd.imgs.map((src, i) => ({ src, border: i === S.img ? '#21c5c4' : '#e5e5e5', pick: () => this.setState({ img: i }) })),
-      detailCartBg: S.cart[S.detail] ? '#21c5c4' : '#ffffff', detailCartBorder: S.cart[S.detail] ? '#21c5c4' : '#333333',
-      showDoc: !!S.doc, docTitle, docIsPage: (S.doc === 'spec' || S.doc === 'sds') && pd.docs, docSrc: pd.docs && docs[S.doc] ? docs[S.doc][1] : '',
-      docIsVideo: S.doc === 'video' && pd.docs, docMissing: !!S.doc && !pd.docs, videoSrc: './assets/6a8ace3020e2da34ae2cc0cef68e3a46.webp', notPlaying: !S.playing, progress: S.playing ? '35%' : '0%',
+      detailCartBg: '#ffffff', detailInCart: !!S.cart[S.detail], detailCartLabel: S.cart[S.detail] ? 'Added to cart' : 'Add to cart', detailCartBorder: S.cart[S.detail] ? '#21c5c4' : '#333333',
+      showDoc: !!S.doc, docTitle, docIsPage: (S.doc === 'spec' || S.doc === 'sds') && !!docs[S.doc], docSrc: docs[S.doc] ? docs[S.doc][1] : '',
+      docIsVideo: S.doc === 'video' && !!docs.video, docMissing: !!S.doc && !(S.doc === 'video' ? docs.video : docs[S.doc]), videoSrc: docs.video || '', notPlaying: !S.playing, progress: S.playing ? '35%' : '0%',
       showRequest: S.request, notSent: !S.sent, sent: S.sent,
       onQ: (e) => this.setState({ q: e.target.value }),
-      doUpload: () => this.setState({ uploaded: true }),
+      doUpload: () => this.setState({ picker: true, sel: {} }),
       doSearch: () => {
         if (!S.q.trim() || S.searching) return;
         const term = S.q.trim();
@@ -253,8 +388,8 @@ class Component extends DCLogic {
       resetFields: () => this.setState({ info: ['', '', '', '', '', ''] }),
       toAttrs: () => this.setState({ step: 'attrs' }),
       checkSavings: () => { this.setState({ step: 'loading' }); this.later(() => this.setState({ step: 'results' }), 1500); },
-      restart: () => this.setState({ step: 'upload', uploaded: false, rows: [], cart: {}, toast: '' }),
-      closeDetail: () => this.setState({ detail: null }),
+      restart: () => this.setState({ step: 'upload', uploaded: false, files: [], rows: [], cart: {}, toast: '' }),
+      closeDetail: () => this.setState({ detail: null, aiMenu: false, showAi: false, lb: false }),
       cartDetail: () => this.addCart(S.detail),
       openSpec: () => this.setState({ doc: 'spec' }), openSds: () => this.setState({ doc: 'sds' }), openVideo: () => this.setState({ doc: 'video', playing: false }),
       closeDoc: () => this.setState({ doc: null, playing: false }), play: () => this.setState({ playing: true }),
@@ -264,8 +399,11 @@ class Component extends DCLogic {
     };
   }
   addCart(id) {
-    this.setState((st) => ({ cart: { ...st.cart, [id]: true }, toast: 'Added to cart' }));
-    this.later(() => this.setState({ toast: '' }), 2200);
+    const had = !!this.state.cart[id];
+    this.setState((st) => { const cart = { ...st.cart }; if (had) delete cart[id]; else cart[id] = true; return { cart, toast: had ? 'Removed from cart' : 'Added to cart', toastSub: this.names[id] || '', toastKind: had ? 'removed' : 'added' }; });
+    if (this.toastTimer) clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => this.setState({ toast: '' }), 2200);
+    this.timers.push(this.toastTimer);
   }
 }
 </script>
