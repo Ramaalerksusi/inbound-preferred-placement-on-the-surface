@@ -271,20 +271,24 @@ class Component extends DCLogic {
   later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
   renderVals() {
     const S = this.state;
-    const G = ['./assets/5ad5e500aee998e54d4103209c958728.webp', './assets/2fcfba2f958e9415f0fff6ecb97bbdee.webp', './assets/0e7e99efdf36452ec0b60f6d86d5abc2.webp'];
+    const G = ['./assets/21d05509dd01aba8714978e0abbc4aa4.webp', './assets/3e01a4ed5d6122d1aa2d809f3005cd8f.webp', './assets/d87188a6ce84019ecc1adccc9a0cee94.webp'];
     const P = {
       gown: { name: 'Isolation Gowns, AAMI Level 2, Universal Size, Yellow', sku: 'DEM-1004', mfr: 'Demo Manufacturer01', cur: 'CLX-2004 · Isolation Gown, Level 2, One Size', imgs: G, docs: true,
-        ai: 'Like your CLX-2004 gown, it’s AAMI Level 2 rated. It adds elastic knit cuffs and a full-back overlap, and comes in packs of 10.',
-        specs: [['$18.95', 'Proposed price'], ['10', 'Pkg qty'], ['Each', 'UoM'], ['Demo Manufacturer01', 'Brand'], ['USA', 'Country of origin'], ['N/A', 'NDC'], ['N/A', 'UPC'], ['In Stock', 'Material status'], ['SMS', 'Material'], ['AAMI PB70 Level 2', 'Protection level'], ['Universal', 'Size'], ['Yellow', 'Color']],
+        ai: 'Like your CLX-2004 gown, it’s AAMI Level 2 rated. It adds elastic knit cuffs and a full-back overlap, and comes in cases of 50.',
+        specs: [['$18.95', 'Proposed price'], ['50', 'Pkg qty'], ['Case', 'UoM'], ['Demo Manufacturer01', 'Brand'], ['USA', 'Country of origin'], ['N/A', 'NDC'], ['N/A', 'UPC'], ['In Stock', 'Material status'], ['SMS', 'Material'], ['AAMI PB70 Level 2', 'Protection level'], ['Universal', 'Size'], ['Yellow', 'Color']],
         certs: 'AAMI PB70 Level 2, FDA Registered, ISO 13485', cat: 'Infection Control / Personal Protection / Protective Apparel / Isolation Gowns' },
-      shield: { name: 'Disposable Face Shields, Full-Length, Anti-Fog', sku: 'DEM-1006', mfr: 'Demo Manufacturer01', cur: 'FS-0918 · Face Shield w/ Headband, 9 in', imgs: ['./assets/448c8d30ea25308c754bd44268b08b0d.webp'], docs: false,
+      shield: { name: 'Disposable Face Shields, Full-Length, Anti-Fog', sku: 'DEM-1006', mfr: 'Demo Manufacturer01', cur: 'FS-0918 · Face Shield w/ Headband, 9 in', imgs: ['./assets/01d6ce5ecfd85c4e2d8206427bdb6595.webp', './assets/3d41417f5557392bcd320d3f635e0f23.webp', './assets/5573b5b11ea85725d96a2481421c99b5.webp'], docs: false,
         ai: 'Like your FS-0918 shield, it’s full-length. It adds an anti-fog coating and a foam headband, and fits over glasses, loupes and masks.',
-        specs: [['[PRICE]', 'Proposed price'], ['10', 'Pkg qty'], ['Box', 'UoM'], ['Demo Manufacturer01', 'Brand'], ['[COUNTRY]', 'Country of origin'], ['N/A', 'NDC'], ['N/A', 'UPC'], ['In Stock', 'Material status'], ['Full-length', 'Length'], ['Anti-fog', 'Coating'], ['Eyes, nose and mouth', 'Coverage'], ['Foam, elastic strap', 'Headband']],
+        specs: [['[PRICE]', 'Proposed price'], ['25', 'Pkg qty'], ['Case', 'UoM'], ['Demo Manufacturer01', 'Brand'], ['[COUNTRY]', 'Country of origin'], ['N/A', 'NDC'], ['N/A', 'UPC'], ['In Stock', 'Material status'], ['Full-length', 'Length'], ['Anti-fog', 'Coating'], ['Eyes, nose and mouth', 'Coverage'], ['Foam, elastic strap', 'Headband']],
         certs: 'FDA Registered, ISO 13485', cat: 'Infection Control / Personal Protection / Face Shields' },
       esg: { name: 'Enzymatic Pre-Soak Spray Gel, 24 oz', sku: 'DEM-PV-ESG24', mfr: 'Demo MFG 01', cur: 'CLX-2036 · Enzymatic Instrument Spray Gel, 24 oz', imgs: ['./assets/9d55d46dc43efc22dd6eb2f8809dbf58.webp', './assets/c534019380a9b2f2a3fbe27910425f86.webp', './assets/ee2081a70cb19de7b35bc88b4cc0e9d0.webp'], docs: true,
         ai: 'Like your CLX-2036 spray gel, it’s a ready-to-use enzymatic pre-soak. It has a multi-enzyme formula and a neutral pH that’s non-corrosive to instruments, and keeps soiled instruments moist until reprocessing.',
         specs: [['$17.95', 'Proposed price'], ['1', 'Pkg qty'], ['BT', 'UoM'], ['Demo MFG 01', 'Brand'], ['United States', 'Country of origin'], ['N/A', 'NDC'], ['850102001043', 'UPC'], ['Ready-to-use spray gel', 'Form'], ['24 fl oz (710 mL)', 'Volume'], ['6.5–7.5 (neutral)', 'pH'], ['Multi-enzyme (protease-based)', 'Enzymes'], ['Pre-soak / holding for soiled instruments', 'Use']],
         certs: 'FDA Registered, ISO 9001', cat: 'Infection Control / Instrument Care / Enzymatic Cleaners' },
+      hood: { name: 'Disposable Nasal Hood, Adult, Bubblegum Scent', sku: 'DEM-AL-NH-ADBG', mfr: 'Demo MFG 01', cur: 'CLX-2048 · Nasal Hood, Adult, Bubblegum Scent', imgs: ['./assets/bf76bfa0a0c184590e3c7b93ad745991.webp', './assets/f30e9e20e589df5311c36897b530f143.webp', './assets/a31fbe7d69b9e6490f4f99073b38318d.webp'], docs: true,
+        ai: 'Like your CLX-2048 hood, it’s adult size with a bubblegum scent. It’s soft, latex-free PVC, fits standard dual-mask scavenging circuits and comes 12 per box.',
+        specs: [['$69.95', 'Proposed price'], ['12', 'Pkg qty'], ['BX', 'UoM'], ['Demo MFG 01', 'Brand'], ['United States', 'Country of origin'], ['N/A', 'NDC'], ['850102001067', 'UPC'], ['Adult', 'Size'], ['Soft medical-grade PVC', 'Material'], ['Bubblegum', 'Scent'], ['Standard dual-mask N2O/O2 scavenging circuits', 'Compatibility'], ['Single patient, disposable', 'Use']],
+        certs: 'FDA 510(k), ISO 13485, ISO 10993', cat: 'Sedation / Nitrous Oxide / Nasal Hoods' },
       ndl: { name: 'Dental Needle 27G Long, Plastic Hub', sku: 'DEM-HV-NDL27L', mfr: 'Demo MFG 01', cur: 'CLX-2015 · Standard Needles 27Ga Long Plastic Hub', imgs: ['./assets/e59ce0dd42792b9aaa32ee2aa948a42e.webp', './assets/387786f74ef54ffd91b68541474674e0.webp', './assets/28be598138a0e1732310e4e1da87d25a.webp'], docs: true,
         ai: 'Like your CLX-2015 needle, it’s 27G long with a plastic hub. It adds a siliconized tri-bevel cannula for smoother penetration, fits standard aspirating cartridge syringes and comes 100 per box.',
         specs: [['$8.95', 'Proposed price'], ['100', 'Pkg qty'], ['BX', 'UoM'], ['Demo MFG 01', 'Brand'], ['Japan', 'Country of origin'], ['N/A', 'NDC'], ['850102001012', 'UPC'], ['27G (0.4 mm)', 'Gauge'], ['Long, approx. 32 mm', 'Length'], ['Plastic, purple', 'Hub'], ['Ethylene oxide (EO)', 'Sterilization'], ['Standard aspirating cartridge syringes', 'Compatibility']],
@@ -314,8 +318,10 @@ class Component extends DCLogic {
       ['#27ae60', 'CLX-2045', 'Cotton Rolls #2, Medium, Non-Sterile', 'Richmond Dental', '200205', 'DEM-200205', 'Richmond Cotton Rolls #2, Medium, 2000/bx', 'cot'],
       ['#f2994a', 'CLX-2052', 'Saliva Ejectors, Clear with Blue Tip', 'Crosstex', 'SEC', 'DEM-SE100', 'Saliva Ejectors, Clear with Blue Tip, 100/bag', 'sal']
     ];
+    if (S.rows.some((r) => r.fid === 'hood')) XR.push(['#ffe70f', 'CLX-2048', 'Nasal Hood, Adult, Bubblegum Scent', 'Demo Dental 06', 'DD6-NH-AD', 'DEM-NH-AD12', 'Scavenging Nasal Hood, Adult, Single-Use, 12/pk', 'ph', 'hood']);
     if (S.rows.some((r) => r.fid === 'esg')) XR.push(['#ffe70f', 'CLX-2036', 'Enzymatic Instrument Spray Gel, 24 oz', 'Demo Chem 03', 'DC3-ESG24', 'DEM-ESG-16', 'Enzymatic Spray Foam, 16 oz', 'pe', 'esg']);
     const GEN = {
+      ph: ['Demo Brand 19', '12', 'Pack', 'Sedation / Nitrous Oxide / Nasal Hoods', 'Like your CLX-2048, it’s a single-use adult nasal hood, 12 per pack, but unscented and with no latex-free claim listed.'],
       pn: ['Demo Brand 18', '100', 'Box', 'Anesthetics / Dental Needles', 'Like your CLX-2015, it’s a 27G long plastic-hub needle, 100 per box. No cannula coating is listed.'],
       pg: ['Demo Brand 04', '10', 'Bag', 'Infection Control / Protective Apparel / Gowns', 'Like your CLX-2004 gown, it’s one size fits all, but it’s white and lists no AAMI protection level. Packed 10 per bag.'],
       ps: ['Demo Brand 05', '72', 'Case', 'Infection Control / Face Shields', 'Like your FS-0918 shield, it’s full length with an elastic headband, but it’s sold by the case of 72 and lists no anti-fog coating.'],
@@ -329,6 +335,8 @@ class Component extends DCLogic {
     XR.forEach((r) => { const g = GEN[r[7]]; if (g) P[r[7]] = { name: r[6], sku: r[5], mfr: g[0], imgs: [], docs: false, ai: g[4],
       specs: [[g[1], 'Pkg qty'], [g[2], 'UoM'], [g[0], 'Brand'], ['[COUNTRY]', 'Country of origin'], ['N/A', 'NDC'], ['N/A', 'UPC'], ['In Stock', 'Material status']], certs: '—', cat: g[3] }; });
     const DESC = {
+      hood: ['Single-patient-use scavenging nasal hood for nitrous oxide/oxygen sedation, adult size, in clear soft PVC with a bubblegum scent. Compatible with standard dual-mask scavenging circuits. Latex-free.', ['Adult size, soft and comfortable fit', 'Pleasant bubblegum scent', 'Fits standard scavenging circuits', 'Single-patient use, latex-free']],
+      ph: ['Single-use adult scavenging nasal hood, unscented. 12 per pack.', ['Adult size', 'Single use', '12 per pack']],
       ndl: ['Sterile single-use dental injection needle, 27 gauge long (approx. 32 mm), with a siliconized tri-bevel stainless steel cannula and color-coded plastic hub. Fits standard aspirating cartridge syringes.', ['27G (0.4 mm) x Long (approx. 32 mm)', 'Tri-bevel, siliconized cannula', 'Color-coded plastic hub', 'Sterile (EO), single use only']],
       pn: ['Sterile disposable dental needles with a plastic hub, 27G long. 100 per box.', ['27G long', 'Plastic hub', '100 per box']],
       pg: ['Basic disposable barrier gown in white, one size fits all. Packed 10 per bag.', ['One size fits all', 'Disposable', '10 per bag']],
@@ -358,7 +366,8 @@ class Component extends DCLogic {
       bg: on ? '#2f6fd6' : '#ffffff', fg: on ? '#ffffff' : '#333333', box: on ? '#ffffff' : '#9e9e9e', boxBg: on ? '#2f6fd6' : '#ffffff', tick: on ? '✓' : '',
       toggle: () => this.setState((st) => ({ sel: { ...st.sel, [i]: !st.sel[i] } })) }; });
     const upFiles = S.files.map((i, k) => ({ name: FILES[i][0], ext: FILES[i][1], color: FILES[i][2], remove: () => this.setState((st) => { const files = st.files.filter((_, j) => j !== k); return { files, uploaded: files.length > 0 }; }) }));
-    const xrows = XR.map((r, i) => ({ sw: r[0], sku: r[1], desc: r[2], sup: 'Apex Medical Distributors', mfg: r[3], mfgsku: r[4], psku: r[5], pdesc: r[6],
+    const SRCH = {}; S.rows.forEach((x) => { if (x.fid) SRCH[x.fid] = x.sku; });
+    const xrows = XR.map((r, i) => ({ sw: r[0], sku: ((r[8] === 'hood' || r[8] === 'esg') && SRCH[r[8]]) ? SRCH[r[8]] : r[1], desc: r[2], sup: 'Apex Medical Distributors', mfg: r[3], mfgsku: r[4], psku: r[5], pdesc: r[6],
       pref: !!r[8], bg: i % 2 === 0 ? '#f6f6f6' : '#ffffff', menuOpen: S.menuRow === i, menuPos: i >= 3 ? 'bottom: 44px' : 'top: 44px',
       open: () => this.setState({ detail: r[8], img: 0, menuRow: null }),
       menu: () => this.setState((st) => ({ menuRow: st.menuRow === i ? null : i })),
@@ -375,13 +384,14 @@ class Component extends DCLogic {
       cartLabel: S.cart[r.pid] ? 'Remove from cart' : 'Add to cart', cart: () => { this.setState({ sMenu: null }); this.addCart(r.pid); }, remove: () => this.setState((st) => ({ rows: st.rows.filter((_, j) => j !== i) })) }));
     const DOCSETS = { gown: { spec: ['DEM-1004 product sheet.pdf', './assets/59684ad515e7d733f2fba7952450d700.webp'], sds: ['DEM-1004 safety data sheet.pdf', './assets/883485b2c8c497836974e018fec60518.webp'], video: './assets/6a8ace3020e2da34ae2cc0cef68e3a46.webp' },
       esg: { spec: ['DEM-PV-ESG24 product sheet.pdf', './assets/8cb24b514d5b65c8d9b1600026ee91a3.webp'], sds: ['DEM-PV-ESG24 SDS.pdf', './assets/0537ba7df8fac24b0f6e379fd00d6d17.webp'], video: './assets/584d326083717b2e2a542326928c332c.webp' },
+      hood: { spec: ['DEM-AL-NH-ADBG product sheet.pdf', './assets/d0b3eaa9fe5c36cdfd1c27323ee2a9a6.webp'], sds: ['DEM-AL-NH-ADBG SDS.pdf', './assets/01f4c13a041c94f1343b9bb9f9de36be.webp'], video: './assets/0dcd4f1772d2dfe513d97542bbf72aff.webp' },
       ndl: { spec: ['DEM-HV-NDL27L product sheet.pdf', './assets/2a7c47ca68d87ac9642a39e35be3b292.webp'], sds: ['DEM-HV-NDL27L SDS.pdf', './assets/0cdce4c296ff575725a210d72434c726.webp'], video: './assets/34a73d5ae8cd00e67bbd6d602c0c16f3.webp' },
       art: { spec: ['DEM-HV-ART4-100 product sheet.pdf', './assets/e3414663fef163f873f343f0cd8e4a94.webp'], sds: ['DEM-HV-ART4-100 SDS.pdf', './assets/2ec372d214370f042f646c0b9c224876.webp'], video: './assets/8fe0a4507406a6bc56b84de1e57dd3b6.webp' } };
     const docs = DOCSETS[S.detail] || {};
     const docTitle = S.doc === 'video' ? 'Product video' : (S.doc ? (docs[S.doc] ? docs[S.doc][0] : (S.doc === 'spec' ? 'Product sheet' : 'Safety data sheet')) : '');
     return {
       steps, fields, rows, featured, pd, xrows, xCount: xrows.length,
-      isFeat: ['gown', 'shield', 'art', 'esg', 'ndl'].indexOf(S.detail) >= 0,
+      isFeat: ['gown', 'shield', 'art', 'esg', 'ndl', 'hood'].indexOf(S.detail) >= 0,
       hasImgs: pd.imgs.length > 0, noImgs: pd.imgs.length === 0, aiMenu: S.aiMenu, showAi: S.showAi,
       toggleAiMenu: () => this.setState((st) => ({ aiMenu: !st.aiMenu })), openAi: () => this.setState({ aiMenu: false, showAi: true }), closeAi: () => this.setState({ showAi: false }),
       isUpload: S.step === 'upload', isInfo: S.step === 'info', isAttrs: S.step === 'attrs', isLoading: S.step === 'loading', isResults: S.step === 'results',
@@ -410,7 +420,7 @@ class Component extends DCLogic {
         if (!S.q.trim() || S.searching) return;
         const term = S.q.trim();
         this.setState({ searching: true });
-        this.later(() => this.setState((st) => ({ searching: false, q: '', rows: st.rows.concat([/2036|enzym|spray gel/i.test(term) ? { sku: 'CLX-2036', desc: 'Enzymatic Instrument Spray Gel, 24 oz', psku: 'DEM-ESG-16', pdesc: 'Enzymatic Spray Foam, 16 oz', pid: 'pe', fid: 'esg' } : { sku: term.toUpperCase(), desc: /fs-?0918/i.test(term) ? 'Face Shield w/ Headband, 9 in' : term, psku: 'DEM500-GCSS9B', pdesc: 'Face Shields w/ Elastic Headband, Full Length (9 inch), 72/cs', pid: 'ps', fid: 'shield' }]) })), 1200);
+        this.later(() => this.setState((st) => ({ searching: false, q: '', rows: st.rows.concat([[{ sku: term.toUpperCase(), desc: 'Nasal Hood, Adult, Bubblegum Scent', psku: 'DEM-NH-AD12', pdesc: 'Scavenging Nasal Hood, Adult, Single-Use, 12/pk', pid: 'ph', fid: 'hood' }, { sku: term.toUpperCase(), desc: 'Enzymatic Instrument Spray Gel, 24 oz', psku: 'DEM-ESG-16', pdesc: 'Enzymatic Spray Foam, 16 oz', pid: 'pe', fid: 'esg' }][st.rows.length] || { sku: term.toUpperCase(), desc: /fs-?0918/i.test(term) ? 'Face Shield w/ Headband, 9 in' : term, psku: 'DEM500-GCSS9B', pdesc: 'Face Shields w/ Elastic Headband, Full Length (9 inch), 72/cs', pid: 'ps', fid: 'shield' }]) })), 1200);
       },
       toInfo: () => { if (S.uploaded || S.rows.length) this.setState({ step: 'info' }); },
       resetFields: () => this.setState({ info: ['', '', '', '', '', ''] }),
